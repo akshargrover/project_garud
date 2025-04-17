@@ -1,0 +1,396 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Route Optimizer - Military Logistics</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/tailwindcss/2.2.19/tailwind.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        body {
+            background-color: #111827;
+            color: #e5e7eb;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+        .dashboard-container {
+            display: grid;
+            grid-template-columns: 400px 1fr;
+            grid-template-rows: auto 1fr auto;
+            height: 100vh;
+            gap: 1rem;
+            padding: 1rem;
+        }
+        .side-panel {
+            grid-column: 1;
+            grid-row: 1 / span 2;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        .map-container {
+            grid-column: 2;
+            grid-row: 1 / span 2;
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            overflow: hidden;
+            position: relative;
+        }
+        .status-panel, .environmental-panel, .mission-panel {
+            background-color: #1f2937;
+            border-radius: 0.5rem;
+            padding: 1rem;
+        }
+        .status-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 0.75rem;
+            margin: 0.25rem 0;
+            background-color: #111827;
+            border-radius: 0.375rem;
+        }
+        .panel-title {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+        }
+        .status-delivered { color: #10b981; }
+        .status-route { color: #3b82f6; }
+        .status-lost { color: #ef4444; }
+        .status-damaged { color: #f59e0b; }
+        
+        .mission-panel {
+            grid-column: 2;
+            grid-row: 3;
+        }
+        .mission-grid {
+            display: grid;
+            grid-template-columns: 1fr auto;
+            gap: 0.5rem;
+        }
+        .mission-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1rem;
+        }
+        .map-controls {
+            position: absolute;
+            top: 1rem;
+            right: 1rem;
+            background-color: rgba(31, 41, 55, 0.7);
+            border-radius: 0.5rem;
+            padding: 0.5rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.5rem;
+        }
+        .map-control-btn {
+            width: 2.5rem;
+            height: 2.5rem;
+            border-radius: 0.375rem;
+            background-color: #374151;
+            color: #e5e7eb;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+        }
+        .map-control-btn:hover {
+            background-color: #4b5563;
+        }
+        #routemap {
+            width: 100%;
+            height: 100%;
+        }
+    </style>
+</head>
+<body>
+    <div class="dashboard-container">
+        <header class="col-span-2 flex justify-between items-center mb-4">
+            <div class="flex items-center">
+                <h1 class="text-3xl font-bold mr-4">OpTrack</h1>
+                <span class="text-xl text-gray-400">Intelligent Military Logistics Management</span>
+            </div>
+        </header>
+        
+        <div class="side-panel">
+            <div class="status-panel">
+                <h2 class="panel-title">Cargo Status</h2>
+                <div class="status-item">
+                    <span class="status-delivered">Delivered</span>
+                    <span>25</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-route">En Route</span>
+                    <span>12</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-lost">Lost</span>
+                    <span>3</span>
+                </div>
+                <div class="status-item">
+                    <span class="status-damaged">Damaged</span>
+                    <span>2</span>
+                </div>
+            </div>
+            
+            <div class="environmental-panel">
+                <h2 class="panel-title">Environmental Condition Monitoring</h2>
+                <div class="status-item">
+                    <span>Sensitive Cargo</span>
+                </div>
+                <div class="status-item">
+                    <span>Temperature</span>
+                    <span>34 °F</span>
+                </div>
+                <div class="status-item">
+                    <span>Humidity</span>
+                    <span>65 %</span>
+                </div>
+            </div>
+            
+            <div class="status-panel">
+                <h2 class="panel-title">Route Optimizer Controls</h2>
+                <div class="p-4 bg-gray-800 rounded-md">
+                    <form id="routeForm">
+                        <div class="mb-3">
+                            <label class="block mb-1">Start Point</label>
+                            <select id="startPoint" class="w-full bg-gray-700 p-2 rounded">
+                                <option value="base_alpha">Base Alpha</option>
+                                <option value="checkpoint_1">Checkpoint 1</option>
+                                <option value="forward_post">Forward Post</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="block mb-1">Destination</label>
+                            <select id="endPoint" class="w-full bg-gray-700 p-2 rounded">
+                                <option value="field_hospital">Field Hospital</option>
+                                <option value="command_post">Command Post</option>
+                                <option value="supply_depot">Supply Depot</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="block mb-1">Mission Priority</label>
+                            <select id="priority" class="w-full bg-gray-700 p-2 rounded">
+                                <option value="standard">Standard</option>
+                                <option value="urgent">Urgent</option>
+                                <option value="critical">Critical</option>
+                            </select>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="block mb-1">Risk Tolerance</label>
+                            <select id="risk" class="w-full bg-gray-700 p-2 rounded">
+                                <option value="low">Low</option>
+                                <option value="medium">Medium</option>
+                                <option value="high">High</option>
+                            </select>
+                        </div>
+                        
+                        <button type="submit" class="w-full bg-blue-600 hover:bg-blue-700 p-2 rounded font-semibold">
+                            Calculate Optimal Route
+                        </button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        
+        <div class="map-container">
+            <div id="routemap"></div>
+            <div class="map-controls">
+                <div class="map-control-btn" title="Zoom In">
+                    <i class="fas fa-plus"></i>
+                </div>
+                <div class="map-control-btn" title="Zoom Out">
+                    <i class="fas fa-minus"></i>
+                </div>
+                <div class="map-control-btn" title="Reset View">
+                    <i class="fas fa-home"></i>
+                </div>
+                <div class="map-control-btn" title="Toggle Terrain">
+                    <i class="fas fa-mountain"></i>
+                </div>
+            </div>
+        </div>
+        
+        <div class="mission-panel">
+            <div class="mission-header">
+                <h2 class="panel-title">Mission Resupply Pane</h2>
+                <span class="text-gray-400">Alpha Company, 2nd Battalion</span>
+            </div>
+            
+            <div class="mission-grid">
+                <div class="status-item">
+                    <span>Alpha Company</span>
+                    <span>200</span>
+                </div>
+                <div class="status-item">
+                    <span>Ammunition</span>
+                    <span>500</span>
+                </div>
+                <div class="status-item">
+                    <span>Medical Supplies</span>
+                    <span>40</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.7.1/leaflet.js"></script>
+    <script>
+        // Initialize map
+        const map = L.map('routemap').setView([34.0522, -118.2437], 10);
+        
+        // Add dark theme map tiles
+        L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+            attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors &copy; <a href="https://carto.com/attributions">CARTO</a>',
+            maxZoom: 19
+        }).addTo(map);
+        
+        // Sample routes (would be replaced with ML model predictions)
+        const routes = {
+            'base_alpha': {
+                'field_hospital': [
+                    [34.05, -118.25],
+                    [34.06, -118.24],
+                    [34.07, -118.22],
+                    [34.08, -118.20]
+                ],
+                'command_post': [
+                    [34.05, -118.25],
+                    [34.04, -118.26],
+                    [34.03, -118.27],
+                    [34.02, -118.28]
+                ],
+                'supply_depot': [
+                    [34.05, -118.25],
+                    [34.06, -118.26],
+                    [34.07, -118.27],
+                    [34.08, -118.28]
+                ]
+            },
+            'checkpoint_1': {
+                'field_hospital': [
+                    [34.03, -118.20],
+                    [34.04, -118.20],
+                    [34.05, -118.20],
+                    [34.08, -118.20]
+                ],
+                'command_post': [
+                    [34.03, -118.20],
+                    [34.03, -118.21],
+                    [34.03, -118.22],
+                    [34.02, -118.28]
+                ],
+                'supply_depot': [
+                    [34.03, -118.20],
+                    [34.04, -118.22],
+                    [34.06, -118.25],
+                    [34.08, -118.28]
+                ]
+            }
+        };
+        
+        // Add markers for potential start/end points
+        const locations = {
+            'base_alpha': [34.05, -118.25],
+            'checkpoint_1': [34.03, -118.20],
+            'forward_post': [34.07, -118.30],
+            'field_hospital': [34.08, -118.20],
+            'command_post': [34.02, -118.28],
+            'supply_depot': [34.08, -118.28]
+        };
+        
+        // Add markers to map
+        for (const [name, coords] of Object.entries(locations)) {
+            const icon = L.divIcon({
+                className: 'custom-div-icon',
+                html: `<div style="background-color: #3b82f6; width: 12px; height: 12px; border-radius: 50%; border: 2px solid white;"></div>`,
+                iconSize: [12, 12]
+            });
+            
+            L.marker(coords, {icon: icon})
+                .addTo(map)
+                .bindTooltip(name.replace('_', ' ').toUpperCase());
+        }
+        
+        // Route form handler
+        document.getElementById('routeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const startPoint = document.getElementById('startPoint').value;
+            const endPoint = document.getElementById('endPoint').value;
+            const priority = document.getElementById('priority').value;
+            const risk = document.getElementById('risk').value;
+            
+            // Clear existing routes
+            map.eachLayer(function(layer) {
+                if (layer instanceof L.Polyline) {
+                    map.removeLayer(layer);
+                }
+            });
+            
+            // Get route from our sample data
+            // In a real app, this would call the ML model API
+            if (routes[startPoint] && routes[startPoint][endPoint]) {
+                const routeCoords = routes[startPoint][endPoint];
+                
+                // Draw the route
+                const routeLine = L.polyline(routeCoords, {
+                    color: priority === 'critical' ? '#ef4444' : 
+                           priority === 'urgent' ? '#f59e0b' : '#3b82f6',
+                    weight: 5,
+                    opacity: 0.7
+                }).addTo(map);
+                
+                // Add risk indicators
+                if (risk === 'low') {
+                    // Add checkpoints with green indicators
+                    for (let i = 1; i < routeCoords.length - 1; i++) {
+                        L.circleMarker(routeCoords[i], {
+                            radius: 8,
+                            color: '#10b981',
+                            fillColor: '#10b981',
+                            fillOpacity: 0.7
+                        }).addTo(map);
+                    }
+                } else if (risk === 'high') {
+                    // Add potential danger points
+                    const midPoint = Math.floor(routeCoords.length / 2);
+                    L.circleMarker(routeCoords[midPoint], {
+                        radius: 8,
+                        color: '#ef4444',
+                        fillColor: '#ef4444',
+                        fillOpacity: 0.7
+                    }).addTo(map).bindTooltip("High Risk Area");
+                }
+                
+                // Fit map to the route
+                map.fitBounds(routeLine.getBounds());
+            }
+        });
+        
+        // Map control buttons
+        document.querySelector('.map-controls').addEventListener('click', function(e) {
+            const btn = e.target.closest('.map-control-btn');
+            if (!btn) return;
+            
+            const icon = btn.querySelector('i');
+            if (icon.classList.contains('fa-plus')) {
+                map.zoomIn();
+            } else if (icon.classList.contains('fa-minus')) {
+                map.zoomOut();
+            } else if (icon.classList.contains('fa-home')) {
+                // Reset to show all markers
+                const bounds = Object.values(locations);
+                map.fitBounds(bounds);
+            } else if (icon.classList.contains('fa-mountain')) {
+                // Toggle terrain layer (simplified for demo)
+                alert('Terrain layer toggle would go here');
+            }
+        });
+    </script>
+</body>
+</html>
