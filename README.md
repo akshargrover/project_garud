@@ -59,26 +59,26 @@ Project GARUD is an advanced AI-driven logistics platform specifically designed 
 ## Technology Stack
 
 ### Backend
-- ![Node.js Logo](https://nodejs.org/static/images/logo.svg) **Node.js** - Runtime environment for server-side JavaScript
-- ![Express.js Logo](https://upload.wikimedia.org/wikipedia/commons/6/64/Expressjs.png) **Express.js** - Web application framework for Node.js
-- ![Flask Logo](https://upload.wikimedia.org/wikipedia/commons/3/3c/Flask_logo.svg) **Flask** - Python web framework for API development
-- ![MongoDB Logo](https://webimages.mongodb.com/_com_assets/cms/mongodb_logo1-76twgcu2dm.png) **MongoDB** - NoSQL database for flexible data storage
+- **Node.js** - Runtime environment for server-side JavaScript
+- **Express.js** - Web application framework for Node.js
+- **Flask** - Python web framework for API development
+- **MongoDB** - NoSQL database for flexible data storage
 
 ### Frontend
-- ![React.js Logo](https://upload.wikimedia.org/wikipedia/commons/a/a7/React-icon.svg) **React.js** - JavaScript library for building user interfaces
+- **React.js** - JavaScript library for building user interfaces
 - **HTML/CSS** - Core web technologies for structure and styling
 
 ### Geospatial & Mapping
-- ![Folium Logo](https://raw.githubusercontent.com/python-visualization/folium/main/docs/_static/folium_logo.png) **Folium** - Python library for interactive maps
-- ![Branca Logo](https://raw.githubusercontent.com/python-visualization/branca/main/docs/_static/branca_logo.png) **Branca** - Python library for generating HTML maps
-- ![OpenStreetMap Logo](https://upload.wikimedia.org/wikipedia/commons/8/8a/Openstreetmap_logo.svg) **OSMX (OpenStreetMap)** - Open-source mapping data and tools
-- ![Geopy Logo](https://geopy.readthedocs.io/en/stable/_static/geopy-logo.png) **geopy** - Python library for geocoding and distance calculations
+- **Folium** - Python library for interactive maps
+- **Branca** - Python library for generating HTML maps
+- **OSMX (OpenStreetMap)** - Open-source mapping data and tools
+- **geopy** - Python library for geocoding and distance calculations
 
 ### Weather & Environmental Data
-- ![OpenWeatherMap Logo](https://openweathermap.org/themes/openweathermap/assets/img/logo_white_cropped.png) **OpenWeatherMap (OWM)** - Weather data API integration
+- **OpenWeatherMap (OWM)** - Weather data API integration
 
 ### Machine Learning & Analytics
-- ![Scikit-learn Logo](https://upload.wikimedia.org/wikipedia/commons/0/05/Scikit_learn_logo_small.svg) **Scikit-learn** - Python library for machine learning and data analysis
+- **Scikit-learn** - Python library for machine learning and data analysis
 
 ## Getting Started
 
