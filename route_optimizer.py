@@ -232,3 +232,25 @@ class EnhancedRouteOptimizer:
             return 'medium'
         else:
             return 'high'
+
+risk_factors = {
+    'low': 1.5,    # Safer routes
+    'medium': 1.0,  # Balanced
+    'high': 0.7     # Faster but riskier
+}
+
+# 1. Initialize with ML model
+optimizer = EnhancedRouteOptimizer('models/route_model.pkl')
+
+# 2. Input: Shipment details and cargo list
+shipment = {
+    'origin_lat': 34.05,
+    'origin_lon': -118.25,
+    'dest_lat': 34.22,
+    'dest_lon': -118.40,
+    'priority': 'urgent'
+}
+
+cargo_list = [
+    {'name': 'Medical Supplies', 'priority': 'critical', 'temperature_min': 2}
+]
