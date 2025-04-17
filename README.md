@@ -18,7 +18,7 @@ These challenges directly impact:
 
 ## Solution Overview
 
-Project GARUD (Geospatial AI-based Routing and Unified Defense logistics) is an advanced AI-driven logistics platform specifically designed for defense scenarios. The platform integrates cutting-edge technologies to optimize military supply chains and minimize cargo losses.
+Project GARUD is an advanced AI-driven logistics platform specifically designed for defense scenarios. The platform integrates cutting-edge technologies to optimize military supply chains and minimize cargo losses.
 
 ### Key Features
 
