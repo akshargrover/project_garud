@@ -58,7 +58,27 @@ Project GARUD is an advanced AI-driven logistics platform specifically designed 
 
 ## Technology Stack
 
-*[To be updated with specific technologies and frameworks used in the implementation]*
+### Backend
+- **Node.js** - Runtime environment for server-side JavaScript
+- **Express.js** - Web application framework for Node.js
+- **Flask** - Python web framework for API development
+- **MongoDB** - NoSQL database for flexible data storage
+
+### Frontend
+- **React.js** - JavaScript library for building user interfaces
+- **HTML/CSS** - Core web technologies for structure and styling
+
+### Geospatial & Mapping
+- **Folium** - Python library for interactive maps
+- **Branca** - Python library for generating HTML maps
+- **OSMX (OpenStreetMap)** - Open-source mapping data and tools
+- **geopy** - Python library for geocoding and distance calculations
+
+### Weather & Environmental Data
+- **OpenWeatherMap (OWM)** - Weather data API integration
+
+### Machine Learning & Analytics
+- **Scikit-learn** - Python library for machine learning and data analysis
 
 ## Getting Started
 
